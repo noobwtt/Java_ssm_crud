@@ -12,6 +12,11 @@
 
 ---
 
+**【页面】**：
+
+![首页crud](https://user-images.githubusercontent.com/48614834/120741371-86bf1c00-c527-11eb-920c-854963485fe2.png)
+
+
 **【数据库建表】**：
 
 tbl_dept表：
