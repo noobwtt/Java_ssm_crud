@@ -7,7 +7,6 @@
         pageContext.setAttribute("APP_PATH",request.getContextPath());
     %>
 
-
     <%--引入jquery--%>
     <script type="text/javascript" src="${APP_PATH}/static/js/jquery-2.0.3.min.js"></script>
     <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
@@ -137,17 +136,21 @@
     <div class="container">
             <%--页面第一行：标题--%>
         <div class="row">
-            <div class="col-md-12"><h1>SSM-CRUD</h1></div>
+            <div class="col-md-4 col-md-offset-4">
+                <h1>员工管理</h1>
+            </div>
         </div>
             <%--页面第二行：按钮--%>
         <div class="row">
             <div class="col-md-2">
-                <button class="btn btn-success" id="emp_add_modal_btn">新增</button>
+                <button class="btn btn-success" id="emp_add_modal_btn">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
+                </button>
             </div>
         </div>
             <%--页面第三行：表格数据--%>
         <div class="row">
-            <table class="table table-bordered" id="MyEmpTable">
+            <table class="table table-hover" id="MyEmpTable">
                 <thead>
                     <tr>
                         <th>empid</th>
