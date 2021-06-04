@@ -139,11 +139,10 @@
         <div class="row">
             <div class="col-md-12"><h1>SSM-CRUD</h1></div>
         </div>
-            <%--页面第二行：俩按钮--%>
+            <%--页面第二行：按钮--%>
         <div class="row">
-            <div class="col-md-2  col-md-offset-10">
+            <div class="col-md-2">
                 <button class="btn btn-success" id="emp_add_modal_btn">新增</button>
-                <button class="btn btn-danger">删除</button>
             </div>
         </div>
             <%--页面第三行：表格数据--%>
@@ -151,8 +150,7 @@
             <table class="table table-bordered" id="MyEmpTable">
                 <thead>
                     <tr>
-                        <th><input type="checkbox" id="check_all"></th>
-                        <th>#</th>
+                        <th>empid</th>
                         <th>empname</th>
                         <th>gender</th>
                         <th>email</th>
@@ -179,7 +177,7 @@
 
         //1.页面加载完成后，要到分页数据
         $(function () {
-            to_page(2);
+            to_page(1);
         });
 
         function to_page(pn){
@@ -205,7 +203,6 @@
             var emps = result.extend.MyPageInfo.list;
             $.each(emps,function (index,item) {
                 // alert(item.empName);
-                var checkboxTd = $("<td><input type='checkbox' class='check_item'></td>")
                 var empIdTd = $("<td></td>").append(item.empId);
                 var empNameTd = $("<td></td>").append(item.empName);
                 var genderTd = $("<td></td>").append(item.gender=='M'?'男':'女');
@@ -227,7 +224,6 @@
 
                 //append执行完成后，返回原来的元素
                 $("<tr></tr>")
-                    .append(checkboxTd)
                     .append(empIdTd)
                     .append(empNameTd)
                     .append(genderTd)
@@ -406,18 +402,6 @@
                 });
             }
         });
-
-        //完成全选/全不选功能
-        $("#check_all").click(function(){
-            $(".check_item").prop("checked",$(this).prop("checked"));
-        });
-        //check_item
-        $(document).on("click",".check_item",function(){
-            //判断当前选择中的元素是否等于总数
-            var flag = $(".check_item:checked").length==$(".check_item").length;
-            $("#check_all").prop("checked",flag);
-        });
-
     </script>
 </body>
 </html>
