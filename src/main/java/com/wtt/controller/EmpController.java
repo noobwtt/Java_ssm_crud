@@ -74,15 +74,37 @@ public class EmpController {
         return Msg.success();
     }
 
+//    /**
+//     * 根据id删除员工
+//     * @param delId
+//     * @return
+//     */
+//    @RequestMapping(value = "/del/{delId}",method = RequestMethod.DELETE)
+//    @ResponseBody
+//    public Msg deleteEmpById(@PathVariable("delId") Integer id){
+//        employeeService.deleteEmpById(id);
+//        return Msg.success();
+//    }
+
+
     /**
-     * 根据id删除员工
-     * @param id
+     * 批量和单条删除
+     * @param del_idstr
      * @return
      */
-    @RequestMapping(value = "/del/{delId}",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delBatch/{del_idstr}",method = RequestMethod.DELETE)
     @ResponseBody
-    public Msg deleteEmpById(@PathVariable("delId") Integer id){
-        employeeService.deleteEmpById(id);
+    public Msg deleteEmpById(@PathVariable("del_idstr") String del_idstr){
+        if (del_idstr.contains(",")){
+            //批量删除
+            String[] ids = del_idstr.split(",");
+            for (String id : ids) {
+                employeeService.deleteEmpById(Integer.parseInt(id));
+            }
+        }else {
+            //单条删除
+            employeeService.deleteEmpById(Integer.parseInt(del_idstr));
+        }
         return Msg.success();
     }
 

@@ -143,8 +143,11 @@
             <%--页面第二行：按钮--%>
         <div class="row">
             <div class="col-md-2">
-                <button class="btn btn-success" id="emp_add_modal_btn">
+                <button class="btn btn-success" id="emp_add_btn">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
+                </button>
+                <button class="btn btn-success" id="emp_deleteBatch_btn">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>删除
                 </button>
             </div>
         </div>
@@ -153,6 +156,7 @@
             <table class="table table-hover" id="MyEmpTable">
                 <thead>
                     <tr>
+                        <th><input type="checkbox" id="checkAll"></th>
                         <th>empid</th>
                         <th>empname</th>
                         <th>gender</th>
@@ -205,7 +209,8 @@
             $("#MyEmpTable tbody").empty();
             var emps = result.extend.MyPageInfo.list;
             $.each(emps,function (index,item) {
-                // alert(item.empName);
+
+                var checkTd = $("<td><input type='checkbox' class='checkOne'></td>");
                 var empIdTd = $("<td></td>").append(item.empId);
                 var empNameTd = $("<td></td>").append(item.empName);
                 var genderTd = $("<td></td>").append(item.gender=='M'?'男':'女');
@@ -227,6 +232,7 @@
 
                 //append执行完成后，返回原来的元素
                 $("<tr></tr>")
+                    .append(checkTd)
                     .append(empIdTd)
                     .append(empNameTd)
                     .append(genderTd)
@@ -307,7 +313,7 @@
 
         /*------------------------------------------------------------------------------------------------------------*/
         /*点击新增，弹出模态框*/
-        $("#emp_add_modal_btn").click(function () {
+        $("#emp_add_btn").click(function () {
             //弹出前，发送ajax请求，查出部门信息,显示在下拉列表中
             getDepts("#empAddModal select");
             /*弹出模态框*/
@@ -405,6 +411,49 @@
                 });
             }
         });
+
+        //checkbox全选，全不选
+        $("#checkAll").click(function () {
+            $(".checkOne").prop("checked",$("#checkAll").prop("checked"));
+        });
+        $(document).on("click",".checkOne",function () {
+            if ($(".checkOne:checked").length==$(".checkOne").length){
+                $("#checkAll").prop("checked",true);
+            }else {
+                $("#checkAll").prop("checked",false);
+            }
+        });
+
+        $("#emp_deleteBatch_btn").click(function () {
+            var empNames = "";
+            var del_idstr = "";
+            $.each($(".checkOne:checked"),function(){
+                //员工name字符串
+                empNames += $(this).parents("tr").find("td:eq(2)").text()+",";
+                //员工id字符串
+                del_idstr += $(this).parents("tr").find("td:eq(1)").text()+",";
+            });
+            //去除末位
+            empNames = empNames.substring(0, empNames.length-1);
+            del_idstr = del_idstr.substring(0, del_idstr.length-1);
+
+            if(confirm("确认删除【"+empNames+"】吗？")){
+                //发送ajax请求删除
+                $.ajax({
+                    url:"${APP_PATH}/delBatch/"+del_idstr,
+                    type:"DELETE",
+                    success:function(result){
+                        //回到当前页面
+                        to_page(current_page);
+                        $("#checkAll").prop("checked",false);
+                    }
+                });
+            }
+
+
+        });
+
+
     </script>
 </body>
 </html>
