@@ -338,7 +338,10 @@
         }
         //新增模态框上的保存按钮，绑定事件
         $("#emp_save_btn").click(function () {
-            // alert($("#empAddModal form").serialize());弹出：empName=&email=&gender=M&dId=1
+            //发ajax请求前，先进行校验
+            if (!validate_form()){
+                return false;
+            }
             //点击保存后，发送ajax请求，保存员工
             $.ajax({
                 url:"${APP_PATH}/saveEmp",
@@ -350,6 +353,64 @@
                 }
             });
         });
+        //校验新增模态框的员工名和邮箱
+        function validate_form() {
+            //失败
+            var validate0 = "0";
+            //成功
+            var validate1 = "1";
+            //员工名校验失败msg
+            var validate0_empName_msg = "员工为2~5位中文，或3~20位英文数字";
+            //邮箱校验失败msg
+            var validate0_email_msg = "邮箱格式有误";
+            //校验成功msg
+            var validate1_msg = "";
+            //empName_add_input
+            var empNameObj = "#empName_add_input";
+            //email_add_input
+            var emailObj = "#email_add_input"
+
+            //员工名
+            var empName = $("#empName_add_input").val();
+            //员工名的正则
+            var reg_empName = /^([\u4e00-\u9fa5]{2,5}|[a-zA-Z\s]{3,20})$/;
+
+            if (!reg_empName.test(empName)){
+                validate_msg(validate0,empNameObj,validate0_empName_msg);
+                return false;
+            } else {
+                validate_msg(validate1,empNameObj,validate1_msg);
+            }
+
+            //邮箱
+            var email = $("#email_add_input").val();
+            //邮箱的正则
+            var reg_eamil = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+
+            if (!reg_eamil.test(email)){
+                validate_msg(validate0,emailObj,validate0_email_msg);
+                return false;
+            }else {
+                validate_msg(validate1,emailObj,validate1_msg);
+            }
+            return true;
+        }
+        //校验信息显示
+        function validate_msg(validateStatus,obj,msg) {
+            //初始化input框的校验信息显示
+            $(obj).parent().removeClass("has-error has-success");
+
+            //validateStatus：1成功，0失败
+            if (validateStatus == "1"){
+                $(obj).parent().addClass("has-success");
+                $(obj).next("span").text(msg);
+            }
+            if (validateStatus == "0"){
+                $(obj).parent().addClass("has-error");
+                $(obj).next("span").text(msg);
+            }
+        }
+
         /*------------------------------------------------------------------------------------------------------------*/
         //点击编辑，弹出模态框
         $(document).on("click",".edit_input",function () {
@@ -425,32 +486,34 @@
         });
 
         $("#emp_deleteBatch_btn").click(function () {
-            var empNames = "";
-            var del_idstr = "";
-            $.each($(".checkOne:checked"),function(){
-                //员工name字符串
-                empNames += $(this).parents("tr").find("td:eq(2)").text()+",";
-                //员工id字符串
-                del_idstr += $(this).parents("tr").find("td:eq(1)").text()+",";
-            });
-            //去除末位
-            empNames = empNames.substring(0, empNames.length-1);
-            del_idstr = del_idstr.substring(0, del_idstr.length-1);
-
-            if(confirm("确认删除【"+empNames+"】吗？")){
-                //发送ajax请求删除
-                $.ajax({
-                    url:"${APP_PATH}/delBatch/"+del_idstr,
-                    type:"DELETE",
-                    success:function(result){
-                        //回到当前页面
-                        to_page(current_page);
-                        $("#checkAll").prop("checked",false);
-                    }
+            if ($(".checkOne:checked").length == 0){
+                alert("请选择需要删除的员工");
+            }else {
+                var empNames = "";
+                var del_idstr = "";
+                $.each($(".checkOne:checked"),function(){
+                    //员工name字符串
+                    empNames += $(this).parents("tr").find("td:eq(2)").text()+",";
+                    //员工id字符串
+                    del_idstr += $(this).parents("tr").find("td:eq(1)").text()+",";
                 });
+                //去除末位
+                empNames = empNames.substring(0, empNames.length-1);
+                del_idstr = del_idstr.substring(0, del_idstr.length-1);
+
+                if(confirm("确认删除【"+empNames+"】吗？")){
+                    //发送ajax请求删除
+                    $.ajax({
+                        url:"${APP_PATH}/delBatch/"+del_idstr,
+                        type:"DELETE",
+                        success:function(result){
+                            //回到当前页面
+                            to_page(current_page);
+                            $("#checkAll").prop("checked",false);
+                        }
+                    });
+                }
             }
-
-
         });
 
 
