@@ -132,7 +132,7 @@
     </div>
 </div>
 
-
+    <%--页面布局--%>
     <div class="container">
             <%--页面第一行：标题--%>
         <div class="row">
@@ -314,6 +314,8 @@
         /*------------------------------------------------------------------------------------------------------------*/
         /*点击新增，弹出模态框*/
         $("#emp_add_btn").click(function () {
+            //初始化form
+            init_form();
             //弹出前，发送ajax请求，查出部门信息,显示在下拉列表中
             getDepts("#empAddModal select");
             /*弹出模态框*/
@@ -322,6 +324,15 @@
                 backdrop:"static"
             });
         });
+        //初始化form
+        function init_form(){
+            //初始化数据
+            $("#empAddModal form")[0].reset();
+            //初始化样式
+            $("#empAddModal form").find("*").removeClass("has-success has-error");
+            //初始化提示信息的内容
+            $("#empAddModal form").find(".help-block").text("");
+        }
         //查出部门信息
         function getDepts(ele){
             $(ele).empty();
@@ -342,14 +353,30 @@
             if (!validate_form()){
                 return false;
             }
+            //邮箱唯一性校验失败的场合
+            if ($("#emp_save_btn").attr("email_ajax_va") == "false"){
+                return false;
+            }
             //点击保存后，发送ajax请求，保存员工
             $.ajax({
                 url:"${APP_PATH}/saveEmp",
                 type:"post",
                 data: $("#empAddModal form").serialize(),
                 success:function (result) {
-                    $("#empAddModal").modal('hide');
-                    to_page(99999);
+                    if (result.code == 100){
+                        //关闭模态框
+                        $("#empAddModal").modal('hide');
+                        //去最新页
+                        to_page(99999);
+                    }else {
+                        //显示JSR303校验的错误信息,哪个字段有就显示哪个
+                        if (result.extend.JSR303_result.empName != undefined){
+                            validate_msg("0","#empName_add_input",result.extend.JSR303_result.empName);
+                        }
+                        if (result.extend.JSR303_result.email != undefined){
+                            validate_msg("0","#empName_add_input",result.extend.JSR303_result.email);
+                        }
+                    }
                 }
             });
         });
@@ -360,7 +387,7 @@
             //成功
             var validate1 = "1";
             //员工名校验失败msg
-            var validate0_empName_msg = "员工为2~5位中文，或3~20位英文数字";
+            var validate0_empName_msg = "员工为2~5位中文，或3~20位英文";
             //邮箱校验失败msg
             var validate0_email_msg = "邮箱格式有误";
             //校验成功msg
@@ -410,6 +437,47 @@
                 $(obj).next("span").text(msg);
             }
         }
+        //新增模态框的emailinput内容改变时，进行校验
+        $("#email_add_input").change(function () {
+            //发ajax请求验证邮箱
+            var email = this.value;
+            $.ajax({
+                url:"${APP_PATH}/checkEmail",
+                data:"email="+email,
+                type:"post",
+                success:function (result) {
+                    if (result.code == 100){
+                        validate_msg("1","#email_add_input","该邮箱可用");
+                        $("#emp_save_btn").attr("email_ajax_va",true);
+                    }
+                    if (result.code == 200){
+                        validate_msg("0","#email_add_input",result.extend.va_email_msg);
+                        $("#emp_save_btn").attr("email_ajax_va",false);
+                    }
+                }
+            });
+        });
+        //新增模态框的empName input内容改变时，进行校验
+        $("#empName_add_input").change(function () {
+            //发ajax请求验证员工名
+            var empName = this.value;
+            $.ajax({
+                url:"${APP_PATH}/checkEmpName",
+                data:"empName="+empName,
+                type:"post",
+                success:function (result) {
+                    console.log(result);
+                    if (result.code == 100){
+                        validate_msg("1","#empName_add_input","该员工名可用");
+                        $("#emp_save_btn").attr("email_ajax_va",true);
+                    }
+                    if (result.code == 200){
+                        validate_msg("0","#empName_add_input","员工为2~5位中文，或3~20位英文");
+                        $("#emp_save_btn").attr("email_ajax_va",false);
+                    }
+                }
+            });
+        });
 
         /*------------------------------------------------------------------------------------------------------------*/
         //点击编辑，弹出模态框

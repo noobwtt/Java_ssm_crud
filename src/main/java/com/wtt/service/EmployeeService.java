@@ -14,4 +14,6 @@ public interface EmployeeService {
     void updateEmpById(Employee employee);
 
     void deleteEmpById(Integer id);
+
+    boolean checkEmail(String email);
 }

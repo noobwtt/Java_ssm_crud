@@ -1,12 +1,18 @@
 package com.wtt.bean;
 
+import javax.validation.constraints.Pattern;
+
 public class Employee {
     private Integer empId;
 
+    @Pattern(regexp = "^([\\u4e00-\\u9fa5]{2,5}|[a-zA-Z\\s]{3,20})$"
+            ,message = "JSR303校验失败：员工为2~5位中文，或3~20位英文数字")
     private String empName;
 
     private String gender;
 
+    @Pattern(regexp = "^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$"
+            ,message = "邮箱格式有误")
     private String email;
 
     private Integer dId;

@@ -8,9 +8,14 @@ import com.wtt.bean.Msg;
 import com.wtt.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class EmpController {
@@ -40,14 +45,24 @@ public class EmpController {
 
     /**
      * 保存员工
+     * Valid注解进行JSR303校验，BindingResult接收校验结果
      * @param employee
      * @return
      */
     @ResponseBody
     @RequestMapping(value = "/saveEmp",method = RequestMethod.POST)
-    public Msg saveEmpWithJson(Employee employee){
-        employeeService.saveEmpWithJson(employee);
-        return Msg.success();
+    public Msg saveEmpWithJson(@Valid Employee employee,BindingResult result){
+        if (result.hasErrors()){
+            Map<String,String> resultMap = new HashMap<>();
+            List<FieldError> fieldErrors = result.getFieldErrors();
+            for (FieldError fieldError : fieldErrors) {
+                resultMap.put(fieldError.getField(),fieldError.getDefaultMessage());
+            }
+            return Msg.fail().add("JSR303_result",resultMap);
+        }else {
+            employeeService.saveEmpWithJson(employee);
+            return Msg.success();
+        }
     }
 
     /**
@@ -74,17 +89,17 @@ public class EmpController {
         return Msg.success();
     }
 
-//    /**
-//     * 根据id删除员工
-//     * @param delId
-//     * @return
-//     */
-//    @RequestMapping(value = "/del/{delId}",method = RequestMethod.DELETE)
-//    @ResponseBody
-//    public Msg deleteEmpById(@PathVariable("delId") Integer id){
-//        employeeService.deleteEmpById(id);
-//        return Msg.success();
-//    }
+    /**
+     * 根据id删除员工
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/del/{delId}",method = RequestMethod.DELETE)
+    @ResponseBody
+    public Msg deleteEmpById(@PathVariable("delId") Integer id){
+        employeeService.deleteEmpById(id);
+        return Msg.success();
+    }
 
 
     /**
@@ -106,6 +121,41 @@ public class EmpController {
             employeeService.deleteEmpById(Integer.parseInt(del_idstr));
         }
         return Msg.success();
+    }
+
+    /**
+     * 校验邮箱
+     * @param email
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/checkEmail")
+    public Msg checkEmail(@RequestParam("email") String email){
+        //校验邮箱是否合法
+        String regEmail = "^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$";
+        if (!email.matches(regEmail)){
+            return Msg.fail().add("va_email_msg","邮箱格式有误");
+        }
+
+        //数据库中校验email是否唯一
+        boolean b = employeeService.checkEmail(email);
+        if (b){
+            return Msg.success();
+        }else{
+            return Msg.fail().add("va_email_msg","邮箱已被使用");
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping("/checkEmpName")
+    public Msg checkEmpName(@RequestParam("empName")String empName){
+        //校验员工名是否合法
+        String regEmpName = "^([\\u4e00-\\u9fa5]{2,5}|[a-zA-Z\\s]{3,20})$";
+        if (!empName.matches(regEmpName)){
+            return Msg.fail();
+        }else {
+            return Msg.success();
+        }
     }
 
 }

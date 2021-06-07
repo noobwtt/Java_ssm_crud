@@ -1,6 +1,7 @@
 package com.wtt.service.impl;
 
 import com.wtt.bean.Employee;
+import com.wtt.bean.EmployeeExample;
 import com.wtt.dao.EmployeeMapper;
 import com.wtt.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,36 +15,65 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Autowired
     private EmployeeMapper employeeMapper;
 
+    /**
+     * 查询所有员工
+     * @return employeeList查到的所有表中的员工list
+     */
     @Override
-    //查询所有员工
     public List<Employee> getEmps() {
         List<Employee> employeeList = employeeMapper.selectByExampleWithDept(null);
         return employeeList;
     }
 
+    /**
+     * 保存员工
+     * @param employee
+     */
     @Override
-    //保存员工
     public void saveEmpWithJson(Employee employee) {
         employeeMapper.insertSelective(employee);
     }
 
+    /**
+     * 查询员工by id
+     * @param id
+     * @return employee查询到的指定id的员工
+     */
     @Override
-    //查询员工by id
     public Employee getEmpById(Integer id) {
         Employee employee = employeeMapper.selectByPrimaryKeyWithDept(id);
         return employee;
     }
 
+    /**
+     * 更新员工，通过id
+     * @param employee
+     */
     @Override
-    //更新员工，通过id
     public void updateEmpById(Employee employee) {
         employeeMapper.updateByPrimaryKeySelective(employee);
     }
 
+    /**
+     * 删除员工，通过id
+     * @param id
+     */
     @Override
-    //删除员工，通过id
     public void deleteEmpById(Integer id) {
         employeeMapper.deleteByPrimaryKey(id);
+    }
+
+    /**
+     * 检验邮箱在表中是否唯一
+     * @param email
+     * @return true：表中不存在这个邮箱   fasle：表中已经存在这个邮箱
+     */
+    @Override
+    public boolean checkEmail(String email) {
+        EmployeeExample example = new EmployeeExample();
+        EmployeeExample.Criteria criteria = example.createCriteria();
+        criteria.andEmailEqualTo(email);
+        return employeeMapper.countByExample(example) == 0;
     }
 
 
