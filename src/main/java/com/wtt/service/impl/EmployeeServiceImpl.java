@@ -76,5 +76,16 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeMapper.countByExample(example) == 0;
     }
 
+    /**
+     * 通过id查询员工
+     * @param empId
+     * @return
+     */
+    @Override
+    public Employee selectById(Integer empId) {
+        Employee employee = employeeMapper.selectByPrimaryKeyWithDept(empId);
+        return employee;
+    }
+
 
 }

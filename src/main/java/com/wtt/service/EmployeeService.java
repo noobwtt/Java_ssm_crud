@@ -16,4 +16,6 @@ public interface EmployeeService {
     void deleteEmpById(Integer id);
 
     boolean checkEmail(String email);
+
+    Employee selectById(Integer empId);
 }

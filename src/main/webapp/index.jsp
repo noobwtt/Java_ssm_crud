@@ -140,7 +140,7 @@
                 <h1>员工管理</h1>
             </div>
         </div>
-            <%--页面第二行：按钮--%>
+            <%--页面第二行：俩按钮和搜索框--%>
         <div class="row">
             <div class="col-md-2">
                 <button class="btn btn-success" id="emp_add_btn">
@@ -149,6 +149,15 @@
                 <button class="btn btn-success" id="emp_deleteBatch_btn">
                     <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>删除
                 </button>
+            </div>
+            <%--搜索框--%>
+            <div class="col-md-2 col-md-offset-8">
+                <div class="input-group">
+                    <input type="text" class="form-control"  placeholder="员工id" id="search_input">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" id="search_emp">搜索</button>
+                    </span>
+                </div>
             </div>
         </div>
             <%--页面第三行：表格数据--%>
@@ -324,6 +333,7 @@
                 backdrop:"static"
             });
         });
+
         //初始化form
         function init_form(){
             //初始化数据
@@ -333,6 +343,7 @@
             //初始化提示信息的内容
             $("#empAddModal form").find(".help-block").text("");
         }
+
         //查出部门信息
         function getDepts(ele){
             $(ele).empty();
@@ -347,6 +358,7 @@
                 }
             });
         }
+
         //新增模态框上的保存按钮，绑定事件
         $("#emp_save_btn").click(function () {
             //发ajax请求前，先进行校验
@@ -380,6 +392,7 @@
                 }
             });
         });
+
         //校验新增模态框的员工名和邮箱
         function validate_form() {
             //失败
@@ -422,6 +435,7 @@
             }
             return true;
         }
+
         //校验信息显示
         function validate_msg(validateStatus,obj,msg) {
             //初始化input框的校验信息显示
@@ -437,6 +451,7 @@
                 $(obj).next("span").text(msg);
             }
         }
+
         //新增模态框的emailinput内容改变时，进行校验
         $("#email_add_input").change(function () {
             //发ajax请求验证邮箱
@@ -457,6 +472,7 @@
                 }
             });
         });
+
         //新增模态框的empName input内容改变时，进行校验
         $("#empName_add_input").change(function () {
             //发ajax请求验证员工名
@@ -494,6 +510,7 @@
                 backdrop:"static"
             });
         });
+
         //根据id查询员工信息，把员工姓名显示在模态框中
         function getEmp(id) {
             $.ajax({
@@ -509,6 +526,7 @@
                 }
             });
         }
+
         //点击编辑模态框的保存按钮，发送ajax请求，保存员工数据
         $("#emp_update_btn").click(function () {
             //发送ajax请求
@@ -553,6 +571,7 @@
             }
         });
 
+        //批量删除
         $("#emp_deleteBatch_btn").click(function () {
             if ($(".checkOne:checked").length == 0){
                 alert("请选择需要删除的员工");
@@ -583,6 +602,73 @@
                 }
             }
         });
+
+        //搜索员工
+        $("#search_emp").click(function () {
+            //获取input框输入的值
+            var empId = $("#search_input").val();
+            //发送ajax请求查询指定姓名的员工
+            $.ajax({
+                url:"${APP_PATH}/selectById",
+                data:"empId="+empId,
+                type:"get",
+                success:function (result) {
+                    //清空表格,分页信息，分页条
+                    emptyDiv();
+
+                    if (result.code == 100){
+                        alert("已找到该员工");
+                        build_emp_table(result);
+                    }
+                    if (result.code == 200){
+                        alert("该员工不存在");
+                        emptyDiv();
+                    }
+                }
+            });
+        });
+
+        //清空表格,分页信息，分页条
+        function emptyDiv() {
+            $("#MyEmpTable tbody").empty();
+            $("#page_info_area").empty();
+            $("#page_nav_area").empty();
+        }
+
+        //解析显示员工数据
+        function build_emp_table(result) {
+            var emp = result.extend.OneEmp;
+            var checkTd = $("<td><input type='checkbox' class='checkOne'></td>");
+            var empIdTd = $("<td></td>").append(emp.empId);
+            var empNameTd = $("<td></td>").append(emp.empName);
+            var genderTd = $("<td></td>").append(emp.gender=='M'?'男':'女');
+            var emailTd = $("<td></td>").append(emp.email);
+            var deptNameTd = $("<td></td>").append(emp.department.deptName);
+
+            <%--<button class="btn btn-primary btn-xs">--%>
+            <%--    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>编辑--%>
+            <%--</button>--%>
+            var edit_btn = $("<button></button>").addClass("btn btn-primary btn-xs edit_input")
+                .append("<span></span>").addClass("glyphicon glyphicon-pencil").append("编辑");
+            //为编辑按钮添加一个自定义的属性，来表示当前员工id
+            edit_btn.attr("edit-id",emp.empId);
+            var del_btn = $("<button></button>").addClass("btn btn-danger btn-xs del_input")
+                .append("<span></span>").addClass("glyphicon glyphicon-trash").append("删除");
+            //为删除按钮添加一个自定义的属性，来表示当前员工id
+            del_btn.attr("del_id",emp.empId);
+            var btnTd = $("<td></td>").append(edit_btn).append(" ").append(del_btn);
+
+            //append执行完成后，返回原来的元素
+            $("<tr></tr>")
+                .append(checkTd)
+                .append(empIdTd)
+                .append(empNameTd)
+                .append(genderTd)
+                .append(emailTd)
+                .append(deptNameTd)
+                .append(btnTd)
+                .appendTo("#MyEmpTable tbody");
+        }
 
 
     </script>

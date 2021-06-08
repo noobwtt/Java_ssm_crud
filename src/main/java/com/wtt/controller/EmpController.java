@@ -44,6 +44,22 @@ public class EmpController {
     }
 
     /**
+     * 通过id查询员工
+     * @param empId
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/selectById")
+    public Msg selectById(@RequestParam("empId") Integer empId){
+        Employee employee = employeeService.selectById(empId);
+        if (employee != null){
+            return Msg.success().add("OneEmp",employee);
+        }else {
+            return Msg.fail();
+        }
+    }
+
+    /**
      * 保存员工
      * Valid注解进行JSR303校验，BindingResult接收校验结果
      * @param employee
