@@ -14,7 +14,7 @@
 
 **【页面】**：
 
-![首页crud](https://user-images.githubusercontent.com/48614834/120741371-86bf1c00-c527-11eb-920c-854963485fe2.png)
+![员工管理](https://user-images.githubusercontent.com/48614834/121118971-60fa8580-c84d-11eb-9411-bb8cbd4559b5.png)
 
 
 **【数据库建表】**：
@@ -73,6 +73,9 @@ spring配置文件中配置SqlSessionTemplate，运行src/main/java/com/wtt/util
 	主页index.jsp直接发送ajax请求进行员工分页数据的查询，
 	
 	查到后以json字符串形式返回给游览器，对json解析后，使用dom增删改让数据在页面显示出来。
+查询(搜索框):
+
+	搜索框输入id后，点击搜索，发送ajax请求，查询指定id的员工，并在页面显示。
 
 新增：
 
