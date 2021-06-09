@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -24,7 +25,6 @@ public class EmpController {
     private EmployeeService employeeService;
 
     /**
-     * 以json字符串形式返回给游览器
      * 查询所有员工
      * @param pn
      * @return
@@ -41,6 +41,15 @@ public class EmpController {
         PageInfo pageInfo = new PageInfo(employeeList,5);
         //将pageinfo交给页面
         return Msg.success().add("MyPageInfo",pageInfo);
+    }
+
+    /**
+     * 跳转到employeePage页面
+     * @return
+     */
+    @RequestMapping("/employeePage")
+    public String page(){
+        return "employeePage";
     }
 
     /**
@@ -162,10 +171,15 @@ public class EmpController {
         }
     }
 
+    /**
+     * 校验员工名是否合法
+     * @param empName
+     * @return
+     */
     @ResponseBody
     @RequestMapping("/checkEmpName")
     public Msg checkEmpName(@RequestParam("empName")String empName){
-        //校验员工名是否合法
+        //员工名正则
         String regEmpName = "^([\\u4e00-\\u9fa5]{2,5}|[a-zA-Z\\s]{3,20})$";
         if (!empName.matches(regEmpName)){
             return Msg.fail();
