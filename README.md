@@ -14,6 +14,8 @@
 
 **【页面】**：
 
+点击左侧的员工信息后:
+
 ![员工管理](https://user-images.githubusercontent.com/48614834/121118971-60fa8580-c84d-11eb-9411-bb8cbd4559b5.png)
 
 
