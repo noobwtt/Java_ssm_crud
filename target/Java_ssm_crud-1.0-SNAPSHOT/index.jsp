@@ -46,6 +46,7 @@
 </div>
 
 <script type="text/javascript">
+    //首页进行登录
     $(function () {
         $("#login_btn").click(function () {
             $.ajax({

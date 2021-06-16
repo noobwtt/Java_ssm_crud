@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.wtt.bean.Department">
     <id column="dept_id" jdbcType="INTEGER" property="deptId" />
     <result column="dept_name" jdbcType="VARCHAR" property="deptName" />
+    <result column="dept_leader" jdbcType="VARCHAR" property="deptLeader" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -64,7 +65,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    dept_id, dept_name
+    dept_id, dept_name, dept_leader
   </sql>
   <select id="selectByExample" parameterType="com.wtt.bean.DepartmentExample" resultMap="BaseResultMap">
     select
@@ -86,6 +87,14 @@
     from tbl_dept
     where dept_id = #{deptId,jdbcType=INTEGER}
   </select>
+
+  <select id="selectAllDepts" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tbl_dept
+    where dept_id = #{deptId,jdbcType=INTEGER}
+  </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from tbl_dept
     where dept_id = #{deptId,jdbcType=INTEGER}

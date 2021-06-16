@@ -7,4 +7,6 @@ import java.util.List;
 public interface DepartmentService {
     List<Department> getDeptsWithJson();
 
+    List<Department> getAllDepts();
+
 }

@@ -21,6 +21,9 @@ public interface DepartmentMapper {
 
     Department selectByPrimaryKey(Integer deptId);
 
+    //查询所有部门
+    List<Department> selectAllDepts();
+
     int updateByExampleSelective(@Param("record") Department record, @Param("example") DepartmentExample example);
 
     int updateByExample(@Param("record") Department record, @Param("example") DepartmentExample example);

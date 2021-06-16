@@ -35,7 +35,7 @@ public class EmpController {
     public Msg getEmpsWithJson(@RequestParam(value = "pn",defaultValue = "1") Integer pn){
         //设置分页信息
         PageHelper.startPage(pn,8);
-        //查询所有员工通过service层
+        //查询所有员工
         List<Employee> employeeList = employeeService.getEmps();
         //将查询结果封装到pageinfo中
         PageInfo pageInfo = new PageInfo(employeeList,5);
@@ -48,7 +48,7 @@ public class EmpController {
      * @return
      */
     @RequestMapping("/employeePage")
-    public String page(){
+    public String empPage(){
         return "employeePage";
     }
 

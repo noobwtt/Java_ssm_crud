@@ -72,12 +72,23 @@
 
 <script type="text/javascript">
     /*点击新增，弹出模态框*/
-    $("#emp_add_btn").click(function () {
+    // $("#emp_add_btn").click(function () {
+    //     //初始化form
+    //     init_form();
+    //     //弹出前，发送ajax请求，查出部门信息,显示在下拉列表中
+    //     getDepts("#empAddModal select");
+    //     /*弹出模态框*/
+    //     $("#empAddModal").modal({
+    //         //backdrop设置为static后，点击背景，模态框不会消失
+    //         backdrop:"static"
+    //     });
+    // });
+    $(".emp_add").click(function () {
         //初始化form
         init_form();
         //弹出前，发送ajax请求，查出部门信息,显示在下拉列表中
         getDepts("#empAddModal select");
-        /*弹出模态框*/
+        //弹出模态框
         $("#empAddModal").modal({
             //backdrop设置为static后，点击背景，模态框不会消失
             backdrop:"static"

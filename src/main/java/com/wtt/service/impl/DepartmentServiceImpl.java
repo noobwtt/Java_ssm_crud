@@ -19,4 +19,10 @@ public class DepartmentServiceImpl implements DepartmentService {
         List<Department> departmentList = departmentMapper.selectByExample(null);
         return departmentList;
     }
+
+    @Override
+    public List<Department> getAllDepts() {
+        List<Department> departmentList = departmentMapper.selectByExample(null);
+        return departmentList;
+    }
 }
