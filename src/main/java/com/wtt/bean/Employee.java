@@ -17,7 +17,6 @@ public class Employee {
 
     private Integer dId;
 
-    //希望查询员工的同时，部分也是查询好的
     private Department department;
     public Department getDepartment() {
         return department;
