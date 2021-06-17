@@ -9,4 +9,11 @@ public interface DepartmentService {
 
     List<Department> getAllDepts();
 
+    void saveDeptWithJson(Department department);
+
+    Department getDeptNameById(Integer id);
+
+    void updateDeptById(Department department);
+
+    void delDeptById(Integer id);
 }

@@ -63,7 +63,7 @@
         //获取点击修改员工的id
         var updateEmpId = $(this).attr("edit-id");
         //1.发送ajax请求，查出部门信息,显示在下拉列表中
-        getDepts("#empUpdateModal select");
+        getDept("#empUpdateModal select");
         //2.发送ajax请求，根据id查询员工信息，把员工姓名显示在模态框中
         getEmp(updateEmpId);
 
@@ -104,7 +104,7 @@
                 //回到当前页
                 to_page(current_page);
                 //提示msg
-                alert("id:"+updateEmpId+"的员工更新成功")
+                alert("id:"+updateEmpId+"的员工更新成功");
             }
         });
     });

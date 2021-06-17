@@ -35,7 +35,7 @@
             </a>
             <ul class="nav nav-pills nav-stacked" id="collapse_dept">
                 <li role="presentation"><a href="#" class="dept_info">部门信息</a></li>
-                <li role="presentation"><a href="#">新增部门</a></li>
+                <li role="presentation"><a href="#" class="dept_add">新增部门</a></li>
             </ul>
         </li>
     </ul>

@@ -25,4 +25,25 @@ public class DepartmentServiceImpl implements DepartmentService {
         List<Department> departmentList = departmentMapper.selectByExample(null);
         return departmentList;
     }
+
+    @Override
+    public void saveDeptWithJson(Department department) {
+        departmentMapper.insertSelective(department);
+    }
+
+    @Override
+    public Department getDeptNameById(Integer id) {
+        Department department = departmentMapper.selectByPrimaryKey(id);
+        return department;
+    }
+
+    @Override
+    public void updateDeptById(Department department) {
+        departmentMapper.updateByPrimaryKeySelective(department);
+    }
+
+    @Override
+    public void delDeptById(Integer id) {
+        departmentMapper.deleteByPrimaryKey(id);
+    }
 }

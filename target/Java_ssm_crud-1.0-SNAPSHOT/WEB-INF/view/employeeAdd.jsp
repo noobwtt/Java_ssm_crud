@@ -7,21 +7,21 @@
 <body>
 
 <!-- 员工新增模态框 -->
-<div class="modal fade" id="empAddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="empAddModal" tabindex="-1" role="dialog" aria-labelledby="emp_add_modal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">新增员工</h4>
+                <h4 class="modal-title">新增员工</h4>
             </div>
-            <div class="modal-body">
 
+            <div class="modal-body">
                 <%--模态框中的内容--%>
                 <form class="form-horizontal">
                     <div class="form-group">
                         <label class="col-sm-2 control-label">empName</label>
                         <div class="col-sm-10">
-                            <input type="text" name="empName" class="form-control" id="empName_add_input" placeholder="empName">
+                            <input type="text" name="empName" class="form-control" id="empName_add_input" placeholder="tom">
                             <%--校验需要↓--%>
                             <span class="help-block"></span>
                         </div>
@@ -87,7 +87,7 @@
         //初始化form
         init_form();
         //弹出前，发送ajax请求，查出部门信息,显示在下拉列表中
-        getDepts("#empAddModal select");
+        getDept("#empAddModal select");
         //弹出模态框
         $("#empAddModal").modal({
             //backdrop设置为static后，点击背景，模态框不会消失

@@ -14,7 +14,8 @@
     <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
     <script src="${APP_PATH}/static/bootstrap-3.4.1-dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
     <!-- 自定义的js文件-->
-    <script type="text/javascript"  src="${APP_PATH}/static/js/MyFunction.js"></script>
+    <script type="text/javascript"  src="${APP_PATH}/static/js/getDept.js"></script>
+    <script type="text/javascript"  src="${APP_PATH}/static/js/pageInfo.js"></script>
 </head>
 <body>
 
@@ -27,17 +28,15 @@
         <!-- 左侧栏 -->
         <%@ include file="leftsidebar.jsp"%>
 
-        <!-- 中间员工表格信息展示内容 -->
+        <!-- 中间内容 -->
         <div class="emp_info col-sm-10">
 
             <div class="panel panel-default">
+                <%--面板头部--%>
                 <div class="panel panel-heading">
-                    <%--俩按钮和搜索框--%>
                     <div class="row">
+                        <%--按钮--%>
                         <div class="col-md-2">
-                            <%--                    <button class="btn btn-success" id="emp_add_btn">--%>
-                            <%--                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增--%>
-                            <%--                    </button>--%>
                             <button class="btn btn-success" id="emp_deleteBatch_btn">
                                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>删除
                             </button>
@@ -47,32 +46,31 @@
                             <div class="input-group">
                                 <input type="text" class="form-control"  placeholder="员工id" id="search_input">
                                 <span class="input-group-btn">
-                            <button class="btn btn-default" type="button" id="search_emp">搜索</button>
-                        </span>
+                                    <button class="btn btn-default" type="button" id="search_emp">搜索</button>
+                                </span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="panel panel-body">
-                    <%--表格数据--%>
-                    <table class="table table-hover" id="MyEmpTable">
-                        <thead>
+                <%--表格数据--%>
+                <table class="table table-hover" id="MyEmpTable">
+                    <thead>
                         <tr>
                             <th><input type="checkbox" id="checkAll"></th>
-                            <th>empid</th>
-                            <th>empname</th>
-                            <th>gender</th>
-                            <th>email</th>
-                            <th>deptname</th>
+                            <th>员工id</th>
+                            <th>员工名</th>
+                            <th>性别</th>
+                            <th>邮箱</th>
+                            <th>所属部门</th>
                             <th>操作</th>
                         </tr>
-                        </thead>
-                        <tbody>
+                    </thead>
+                    <tbody>
                         <%--表格内容--%>
-                        </tbody>
-                    </table>
-                </div>
+                    </tbody>
+                </table>
+
                 <div class="panel panel-body">
                     <%--分页信息和分页条--%>
                     <div class="row">
@@ -99,7 +97,7 @@
 
     //页面加载完成后，得到分页数据
     $(function () {
-        to_page(1)
+        to_page(1);
     });
     //分页数据，跳转
     function to_page(pn){
@@ -161,74 +159,6 @@
                 .appendTo("#MyEmpTable tbody")
         });
     }
-    //2.解析显示分页信息
-    function build_page_info(result) {
-        var pageInfo = result.extend.MyPageInfo;
-        $("#page_info_area").empty();
-        $("#page_info_area").append("当前是第"+pageInfo.pageNum+"页,总共"+pageInfo.pages+"页，共有"+pageInfo.total+"条数据");
-        current_page = pageInfo.pageNum;
-    }
-
-    //3.解析显示分页条
-    function build_page_name(result) {
-        $("#page_nav_area").empty();
-
-        var ul =$("<ul></ul>").addClass("pagination");
-
-        //a.构建元素
-        var firstPageLi = $("<li></li>").append($("<a></a>").append("首页").attr("href","#"));
-        var prePageLi = $("<li></li>").append($("<a></a>").append("&laquo;"));
-        //如果没有前一页，disable
-        if (!result.extend.MyPageInfo.hasPreviousPage){
-            firstPageLi.addClass("disabled");
-            prePageLi.addClass("disabled");
-        }else {
-            //b.为元素添加点击翻页的事件
-            firstPageLi.click(function () {
-                to_page(1);
-            });
-            prePageLi.click(function () {
-                to_page(result.extend.MyPageInfo.pageNum-1);
-            });
-        }
-
-        var nextPageLi = $("<li></li>").append($("<a></a>").append("&raquo;"));
-        var lastPageLi = $("<li></li>").append($("<a></a>").append("末页").attr("href","#"));
-        //如果没有后一页，disable
-        if (!result.extend.MyPageInfo.hasNextPage){
-            nextPageLi.addClass("disabled");
-            lastPageLi.addClass("disabled");
-        }else {
-            nextPageLi.click(function () {
-                to_page(result.extend.MyPageInfo.pageNum+1);
-            });
-            lastPageLi.click(function () {
-                to_page(result.extend.MyPageInfo.pages);
-            });
-        }
-
-        //添加首页，上页
-        ul.append(firstPageLi).append(prePageLi);
-        //遍历给ul中添加页码提示
-        $.each(result.extend.MyPageInfo.navigatepageNums,function (index,item) {
-
-            var numLi = $("<li></li>").append($("<a></a>").append(item));
-            //如果当前页=正在遍历的页，active
-            if (result.extend.MyPageInfo.pageNum==item){
-                numLi.addClass("active");
-            }
-            //li点击以后，再发ajax请求，去指定页码
-            numLi.click(function (){
-                to_page(item);
-            });
-            ul.append(numLi);
-        });
-        //添加下页，末页
-        ul.append(nextPageLi).append(lastPageLi);
-        //把ul加入到nav
-        var navEle = $("<nav></nav>").append(ul);
-        navEle.appendTo("#page_nav_area");
-    }
 
     //点击删除，发送ajax请求
     $(document).on("click",".del_input",function () {
@@ -259,7 +189,7 @@
     //批量删除
     $("#emp_deleteBatch_btn").click(function () {
         if ($(".checkOne:checked").length == 0){
-            alert("请选择需要删除的员工");
+            alert("请勾选需要删除的员工");
         }else {
             var empNames = "";
             var del_idstr = "";
